@@ -74,9 +74,9 @@ function onSearch(e) {
 
 function markupPhotoList(object) {
   return object.results.map(({ poster_path, backdrop_path, title, original_title, genre_ids, vote_average, release_date, }) =>
-          `<a class="gallery__item" href="${poster_path}">
+          `<a class="gallery__item" href="https://image.tmdb.org/t/p/original${backdrop_path}">
             <div class="photo-card">
-                <img src="${backdrop_path}" alt="${title}" loading="lazy" />
+                <img src="https://image.tmdb.org/t/p/original${poster_path}" alt="${title}" loading="lazy" />
                 <div class="info">
                     <p class="info-item">
                         <b>${original_title}</b>
