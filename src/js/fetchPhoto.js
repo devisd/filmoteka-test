@@ -7,8 +7,7 @@ export default class FetchImages {
   constructor() {
     this.searchQuery = "";
     this.page = 1;
-    this.per_page = 40;
-    this.year = "";
+    this.per_page = 20;
   }
 
   fetchImages() {
@@ -16,12 +15,10 @@ export default class FetchImages {
       .get(URL, {
         params: {
           api_key: KEY,
-          language: en-US,
           query: this.searchQuery,
           page: this.page,
-          include_adult: false,
-          year: this.year,
-          // per_page: this.per_page,
+          // include_adult: false,
+          per_page: this.per_page,
         },
       })
       .then((response) => {

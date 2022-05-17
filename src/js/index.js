@@ -1,10 +1,10 @@
 // import Styles
 import "../css/styles.css";
 // // SimpleLightbox
-// import SimpleLightbox from "simplelightbox";
-// import "simplelightbox/dist/simple-lightbox.min.css";
+import SimpleLightbox from "simplelightbox";
+import "simplelightbox/dist/simple-lightbox.min.css";
 // Notiflix
-// import { Notify } from "notiflix/build/notiflix-notify-aio";
+import { Notify } from "notiflix/build/notiflix-notify-aio";
 // import API
 import FetchImages from "./fetchPhoto";
 
@@ -13,10 +13,10 @@ const refs = {
   galleryList: document.querySelector(".gallery"),
   loadMoreBtn: document.querySelector(".load-more"),
   fetchPhoto: new FetchImages(),
-  // gallery: new SimpleLightbox(".gallery a", { loop: true, enableKeyboard: true, docClose: true, }),
+  gallery: new SimpleLightbox(".gallery a", { loop: true, enableKeyboard: true, docClose: true, }),
 };
 
-// refs.loadMoreBtn.setAttribute("disabled", true);
+refs.loadMoreBtn.setAttribute("disabled", true);
 
 refs.form.addEventListener("submit", onSearch);
 // refs.loadMoreBtn.addEventListener("click", onClick);
@@ -24,30 +24,26 @@ refs.form.addEventListener("submit", onSearch);
 function onSearch(e) {
   e.preventDefault();
 
+  refs.loadMoreBtn.removeAttribute("disabled");
 
-  // refs.loadMoreBtn.removeAttribute("disabled");
+  refs.fetchPhoto.query = e.currentTarget.elements.searchQuery.value.trim();
+  try {
 
-  const searchName = e.currentTarget.elements.searchQuery.value.trim();
-  // try {
- 
-  fetch(`https://api.themoviedb.org/3/search/movie?api_key=60778458bdbdfa7e14ca7e73fe4a1fef&query=${searchName}&page=1`)
-  // if (refs.fetchPhoto.query === "") {
-  //     refs.loadMoreBtn.setAttribute("disabled", true);
-  //     return Notify.warning("Please enter your request");
-  //   }
+  // fetch(`https://api.themoviedb.org/3/search/movie?api_key=60778458bdbdfa7e14ca7e73fe4a1fef&query=${searchName}&page=1`)
+  if (refs.fetchPhoto.query === "") {
+      refs.loadMoreBtn.setAttribute("disabled", true);
+      return Notify.warning("Please enter your request");
+    }
 
-    // clearMarkup();
-    // refs.fetchPhoto.resetPage();
+    clearMarkup();
+    refs.fetchPhoto.resetPage();
 
-    // refs.fetchPhoto.fetchImages()
-  //     .then((object) => {
-  //       totalHitsCheck(object);
-  //       return markupPhotoList(object);
-  //     })
-  //     .then(renderGallery);
-  // } catch {
-  //   onError();
-  // }
+    refs.fetchPhoto.fetchImages()
+      .then(markupPhotoList)
+      .then(renderGallery);
+  } catch {
+    onError();
+  }
 }
 
 // function onClick() {
@@ -76,43 +72,43 @@ function onSearch(e) {
 //   checkEndofSearchResult(object);
 // }
 
-// function markupPhotoList(object) {
-//   return object.hits.map(({ largeImageURL, webformatURL, tags, likes, views, comments, downloads, }) =>
-//         `<a class="gallery__item" href="${largeImageURL}">
-//             <div class="photo-card">
-//                 <img src="${webformatURL}" alt="${tags}" loading="lazy" />
-//                 <div class="info">
-//                     <p class="info-item">
-//                         <b>Likes</b>${likes}
-//                     </p>
-//                     <p class="info-item">
-//                         <b>Views</b>${views}
-//                     </p>
-//                     <p class="info-item">
-//                         <b>Comments</b>${comments}
-//                     </p>
-//                     <p class="info-item">
-//                         <b>Downloads</b>${downloads}
-//                     </p>
-//                 </div>
-//             </div>
-//         </a>`
-//     ).join("");
-// }
+function markupPhotoList(object) {
+  return object.results.map(({ poster_path, backdrop_path, title, original_title, genre_ids, vote_average, release_date, }) =>
+          `<a class="gallery__item" href="${poster_path}">
+            <div class="photo-card">
+                <img src="${backdrop_path}" alt="${title}" loading="lazy" />
+                <div class="info">
+                    <p class="info-item">
+                        <b>${original_title}</b>
+                    </p>
+                    <p class="info-item">
+                        <b>Genre</b>${genre_ids}
+                    </p>
+                    <p class="info-item">
+                        <b>Rating</b>${vote_average}
+                    </p>
+                    <p class="info-item">
+                        <b>Release Date</b>${release_date}
+                    </p>
+                </div>
+            </div>
+          </a>`
+    ).join("");
+}
 
-// function renderGallery(markup) {
-//   refs.galleryList.insertAdjacentHTML("beforeend", markup);
-//   refs.gallery.refresh();
-// }
+function renderGallery(markup) {
+  refs.galleryList.insertAdjacentHTML("beforeend", markup);
+  refs.gallery.refresh();
+}
 
-// function clearMarkup() {
-//   refs.galleryList.innerHTML = "";
-// }
+function clearMarkup() {
+  refs.galleryList.innerHTML = "";
+}
 
-// function onError() {
-//   refs.loadMoreBtn.setAttribute("disabled", true);
-//   return Notify.failure("Oops, that went wrong. Please try again later");
-// }
+function onError() {
+  refs.loadMoreBtn.setAttribute("disabled", true);
+  return Notify.failure("Oops, that went wrong. Please try again later");
+}
 
 // // ==========================================================================================================
 
