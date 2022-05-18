@@ -14,6 +14,7 @@ const refs = {
   loadMoreBtn: document.querySelector(".load-more"),
   fetchPhoto: new FetchImages(),
   gallery: new SimpleLightbox(".gallery a", { loop: true, enableKeyboard: true, docClose: true, }),
+  poster_path: 'https://image.tmdb.org/t/p/w500',
 };
 
 refs.loadMoreBtn.setAttribute("disabled", true);
@@ -74,9 +75,9 @@ function onSearch(e) {
 
 function markupPhotoList(object) {
   return object.results.map(({ poster_path, backdrop_path, title, original_title, genre_ids, vote_average, release_date, }) =>
-          `<a class="gallery__item" href="https://image.tmdb.org/t/p/original${backdrop_path}">
+          `<a class="gallery__item" href="https://image.tmdb.org/t/p/w500${backdrop_path}">
             <div class="photo-card">
-                <img src="https://image.tmdb.org/t/p/original${poster_path}" alt="${title}" loading="lazy" />
+                <img src="https://image.tmdb.org/t/p/w500${poster_path}" alt="${title}" loading="lazy" />
                 <div class="info">
                     <p class="info-item">
                         <b>${original_title}</b>
